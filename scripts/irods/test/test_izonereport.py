@@ -137,3 +137,18 @@ class Test_Izonereport(unittest.TestCase):
         
         self.assertIn('coordinating_resources', zone_info.keys())
         self.assertEqual(len(zone_info['coordinating_resources']), 3)
+        
+    # see issue #3739
+    def test_resource_json_has_comments_and_info(self):
+        _, stdout, _ = self.admin.assert_icommand('izonereport', 'STDOUT')
+        
+        zone_info = json.loads(stdout)['zones'][0]
+        
+        for resource in zone_info['coordinating_resources']:
+            self.assertIn('comments', resource.keys())
+            self.assertIn('info', resource.keys())
+        
+        for server in zone_info["servers"]:
+            for resource in server['resources']:
+                self.assertIn('comments', resource.keys())
+                self.assertIn('info', resource.keys())
