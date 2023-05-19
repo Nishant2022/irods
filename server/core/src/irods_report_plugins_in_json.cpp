@@ -145,6 +145,17 @@ namespace irods {
             return PASS(ret);
         }
 
+        std::string comments;
+        ret = _resc->get_property< std::string >( irods::RESOURCE_COMMENTS, comments );
+        if ( !ret.ok() ) {
+            return PASS(ret);
+        }
+        std::string info;
+        ret = _resc->get_property< std::string >( irods::RESOURCE_INFO, info );
+        if ( !ret.ok() ) {
+            return PASS(ret);
+        }
+
         int status = 0;
         ret = _resc->get_property< int >( irods::RESOURCE_STATUS, status );
         if ( !ret.ok() ) {
@@ -160,6 +171,8 @@ namespace irods {
         _entry["parent_resource"] = parent;
         _entry["parent_context"] = parent_context;
         _entry["free_space"] = freespace;
+        _entry["comments"] = comments;
+        _entry["info"] = info;
         _entry["status"] = (status != INT_RESC_STATUS_DOWN) ? "up" : "down";
 
         return SUCCESS();
