@@ -139,9 +139,8 @@ class Test_Izonereport(unittest.TestCase):
         self.assertIn('coordinating_resources', zone_info.keys())
         self.assertEqual(len(zone_info['coordinating_resources']), 3)
         
-    # see issue #6856
     @unittest.skipIf(plugin_name == 'irods_rule_engine_plugin-python', "only run for native rule language")
-    def test_plugin_calculate_checksums(self):
+    def test_zone_report_calculates_checksums_for_all_plugins__issue_6856(self):
         
         _, stdout, _ = self.admin.assert_icommand('izonereport', 'STDOUT')
         
