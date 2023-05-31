@@ -1,10 +1,12 @@
 #include "irods/irods_report_plugins_in_json.hpp"
 #include "irods/checksum.h"
 #include "irods/SHA256Strategy.hpp"
+#include "irods/irods_logger.hpp"
 
 #include <fmt/format.h>
 
 using json = nlohmann::json;
+using log_api = irods::experimental::log::api;
 
 namespace irods {
 
@@ -31,15 +33,13 @@ namespace irods {
              ++itr)
         {
 
-            // Get filepath
             const auto filepath = fmt::format("{}lib{}.so", plugin_home, *itr);
 
-            // Get checksum
-            char checksum[NAME_LEN];
+            char checksum[NAME_LEN]{};
             int ret = chksumLocFile(filepath.c_str(), checksum, irods::SHA256_NAME.c_str());
 
             if (ret < 0) {
-                irods::log(ret, "ChecksumLocFile Failure"); // TODO update message
+                log_api::error("ChecksumLocFile Failure - Failed to calculate checksum for plugin: [{}]", *itr);
                 std::strncpy(checksum, "", sizeof(checksum));
             }
 
