@@ -163,19 +163,10 @@ class Test_Izonereport(unittest.TestCase):
                 self.assertIn('comments', resource.keys())
                 self.assertIn('info', resource.keys())
 
-    @unittest.skipIf(plugin_name == 'irods_rule_engine_plugin-python' or test.settings.RUN_IN_TOPOLOGY, "Skip for Topology Testing or python rule engine")
+    @unittest.skipIf(plugin_name == 'irods_rule_engine_plugin-python', "Skip for python rule engine")
     def test_no_server_duplication_core__issue_3682(self):
         _, stdout, _ = self.admin.assert_icommand('izonereport', 'STDOUT')
         
         zone_info = json.loads(stdout)['zones'][0]
         
-        self.assertEqual(len(zone_info['servers']), 1)
-    
-    @unittest.skipIf(plugin_name == 'irods_rule_engine_plugin-python' or not test.settings.RUN_IN_TOPOLOGY, "Skip for Core Testing or python rule engine")
-    def test_no_server_duplication_topology__issue_3682(self):
-        _, stdout, _ = self.admin.assert_icommand('izonereport', 'STDOUT')
-        
-        zone_info = json.loads(stdout)['zones'][0]
-        
-        self.assertEqual(len(zone_info['servers']), 4)
-        
+        self.assertEqual(len(zone_info['servers']), 4 if test.settings.RUN_IN_TOPOLOGY else 1)
