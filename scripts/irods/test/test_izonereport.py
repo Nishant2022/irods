@@ -10,12 +10,11 @@ from .. import lib
 from . import session
 from ..test.command import assert_command
 from ..configuration import IrodsConfig
-from . import settings
 from .. import test
 from .. import paths
 
 class Test_Izonereport(unittest.TestCase):
-    
+
     plugin_name = IrodsConfig().default_rule_engine_plugin
 
     @classmethod
@@ -95,46 +94,29 @@ class Test_Izonereport(unittest.TestCase):
             
             zone_info = json.loads(stdout)['zones'][0]
             server_array = zone_info['servers']
-            catalog_server = None
+            server = None
             for server in server_array:
+                # If server is a catalog server
                 if server['server_config']['catalog_service_role'] == 'provider':
-                    catalog_server = server
-                    break
-            
-            self.assertIsNotNone(catalog_server)
-                
-            self.assertIn('resources', catalog_server.keys())
-            self.assertGreaterEqual(len(catalog_server['resources']), 1)
-            for resource in catalog_server['resources']:
-                self.assertIn('id', resource.keys())
+                    self.assertIn('resources', server.keys())
+                    self.assertGreaterEqual(len(server['resources']), 1)
+                    for resource in server['resources']:
+                        self.assertIn('id', resource.keys())
 
             self.assertIn('coordinating_resources', zone_info.keys())
             self.assertGreaterEqual(len(zone_info['coordinating_resources']), 1)
             for resource in zone_info['coordinating_resources']:
                 self.assertIn('id', resource.keys())
 
-    @unittest.skipIf(plugin_name == 'irods_rule_engine_plugin-python' or test.settings.RUN_IN_TOPOLOGY, "Skip for Topology Testing or python rule engine")
-    def test_servers_are_flattened_core__issue_6857(self):
+    @unittest.skipIf(plugin_name == 'irods_rule_engine_plugin-python', "Skip for python rule engine")
+    def test_servers_are_flattened__issue_6857(self):
         
         _, stdout, _ = self.admin.assert_icommand('izonereport', 'STDOUT')
         
         zone_info = json.loads(stdout)['zones'][0]
         self.assertIn('servers', zone_info.keys())
         self.assertNotIn('catalog_server', zone_info.keys())
-        self.assertEqual(len(zone_info['servers']), 1)
-        
-        self.assertIn('coordinating_resources', zone_info.keys())
-        self.assertEqual(len(zone_info['coordinating_resources']), 3)
-        
-    @unittest.skipIf(plugin_name == 'irods_rule_engine_plugin-python' or not test.settings.RUN_IN_TOPOLOGY, "Skip for Core Testing or python rule engine")
-    def test_servers_are_flattened_topology__issue_6857(self):
-        
-        _, stdout, _ = self.admin.assert_icommand('izonereport', 'STDOUT')
-        
-        zone_info = json.loads(stdout)['zones'][0]
-        self.assertIn('servers', zone_info.keys())
-        self.assertNotIn('catalog_server', zone_info.keys())
-        self.assertEqual(len(zone_info['servers']), 4)
+        self.assertEqual(len(zone_info['servers']), 4 if test.settings.RUN_IN_TOPOLOGY else 1)
         
         self.assertIn('coordinating_resources', zone_info.keys())
         self.assertEqual(len(zone_info['coordinating_resources']), 3)
