@@ -145,9 +145,9 @@ class Test_Izonereport(unittest.TestCase):
                         break
                     
                 plugin_path = os.path.join(plugin_folder, plugin_name)
-                plugin_checksum = lib.file_digest(plugin_path, 'sha256', encoding='base64')
+                expected_plugin_checksum = lib.file_digest(plugin_path, 'sha256', encoding='base64')
                 
-                self.assertEqual(plugin['checksum_sha256'][5:], plugin_checksum)
+                self.assertEqual(plugin['checksum_sha256'], expected_plugin_checksum)
         
     def test_resource_json_has_comments_and_info_fields__issue_3739(self):
         _, stdout, _ = self.admin.assert_icommand('izonereport', 'STDOUT')
