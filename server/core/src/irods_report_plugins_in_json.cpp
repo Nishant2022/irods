@@ -168,12 +168,12 @@ namespace irods {
 
         std::string comments;
         ret = _resc->get_property< std::string >( irods::RESOURCE_COMMENTS, comments );
-        if ( !ret.ok() ) {
+        if (!ret.ok()) {
             return PASS(ret);
         }
         std::string info;
         ret = _resc->get_property< std::string >( irods::RESOURCE_INFO, info );
-        if ( !ret.ok() ) {
+        if (!ret.ok()) {
             return PASS(ret);
         }
 
