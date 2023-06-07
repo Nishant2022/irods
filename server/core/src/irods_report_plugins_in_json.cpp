@@ -34,6 +34,12 @@ namespace irods {
              itr != plugin_list.end();
              ++itr)
         {
+            json plug{
+                {"name", itr->c_str()},
+                {"type", _type_name},
+                {"version", ""}
+            };
+
             const auto filepath = fmt::format("{}lib{}.so", plugin_home, *itr);
 
             char checksum[NAME_LEN]{};
@@ -41,15 +47,12 @@ namespace irods {
 
             if (ret < 0) {
                 log_api::error("Failed to calculate checksum for plugin: [{}], status = {}", *itr, ret);
-                std::strncpy(checksum, "", sizeof(checksum));
+                plug["checksum_sha256"] = "";
             }
-
-            json plug{
-                {"name", itr->c_str()},
-                {"type", _type_name},
-                {"version", ""},
-                {"checksum_sha256", checksum + std::strlen("sha2:")} // Add checksum without sha2: prefix
-            };
+            else {
+                constexpr int sha256_prefix_length = 5;
+                plug["checksum_sha256"] = checksum + sha256_prefix_length;
+            }
 
             _json_array.push_back(plug);
         }
