@@ -98,6 +98,7 @@ namespace
                 for (const nlohmann::json& server : zone.at("servers")) {
                     if (server.at("server_config").at("catalog_service_role") == "provider") {
                         catalog_server = &server;
+                        break;
                     }
                 }
 
