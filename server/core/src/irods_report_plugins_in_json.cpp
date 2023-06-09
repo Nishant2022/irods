@@ -38,7 +38,8 @@ namespace irods {
 
             const auto filepath = fmt::format("{}lib{}.so", plugin_home, *itr);
 
-            char checksum[NAME_LEN]{};
+            char checksum[NAME_LEN]{}; // NOLINT(cppcoreguidelines-avoid-c-arrays, modernize-avoid-c-arrays)
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
             int ret = chksumLocFile(filepath.c_str(), checksum, irods::SHA256_NAME.c_str());
 
             if (ret < 0) {
@@ -47,6 +48,7 @@ namespace irods {
             }
             else {
                 constexpr int sha256_prefix_length = 5;
+                // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds*)
                 plug["checksum_sha256"] = checksum + sha256_prefix_length;
             }
 
