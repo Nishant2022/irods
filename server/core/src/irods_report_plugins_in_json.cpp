@@ -34,11 +34,7 @@ namespace irods {
              itr != plugin_list.end();
              ++itr)
         {
-            json plug{
-                {"name", itr->c_str()},
-                {"type", _type_name},
-                {"version", ""}
-            };
+            json plug{{"name", itr->c_str()}, {"type", _type_name}, {"version", ""}};
 
             const auto filepath = fmt::format("{}lib{}.so", plugin_home, *itr);
 
