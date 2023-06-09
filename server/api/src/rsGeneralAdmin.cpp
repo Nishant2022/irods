@@ -104,11 +104,10 @@ namespace
 
                 // Administrators are not allowed to invoke administrative operations in a remote zone.
                 // Therefore, skip all servers that do not belong to the local zone.
-                if (catalog_server && 
-                    catalog_server->at("service_account_environment")
-                                    .at("irods_zone_name")
-                                    .get_ref<const std::string&>() != local_zone_name
-                    ) {
+                if (catalog_server && catalog_server->at("service_account_environment")
+                                              .at("irods_zone_name")
+                                              .get_ref<const std::string&>() != local_zone_name)
+                {
                     continue;
                 }
 
