@@ -48,8 +48,7 @@ namespace irods {
             }
             else {
                 constexpr int sha256_prefix_length = 5;
-                // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds*)
-                plug["checksum_sha256"] = checksum + sha256_prefix_length;
+                plug["checksum_sha256"] = checksum + sha256_prefix_length; // NOLINT: Allow pointer arithmetic
             }
 
             _json_array.push_back(plug);
