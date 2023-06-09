@@ -53,7 +53,6 @@ class Test_Izonereport(unittest.TestCase):
         ]
 
         zone_info = json.loads(stdout)['zones'][0]
-            
         self.assertIn('coordinating_resources', zone_info.keys())
         coord_array = zone_info['coordinating_resources']
         coord_names = [n for n in map(lambda r : r['name'], coord_array)]
