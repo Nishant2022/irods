@@ -100,7 +100,7 @@ irods::error get_server_reports(rsComm_t* _comm, json& _resc_arr)
         }
 
         // skip null tmp_hosts resources ( coordinating )
-        if (!tmp_host) {
+        if (!tmp_host) { // NOLINT(readability-implicit-bool-conversion)
             continue;
         }
 
