@@ -121,14 +121,12 @@ class Test_Izonereport(unittest.TestCase):
         
     @unittest.skipIf(plugin_name == 'irods_rule_engine_plugin-python', "only run for native rule language")
     def test_zone_report_calculates_checksums_for_all_plugins__issue_6856(self):
-        
         _, stdout, _ = self.admin.assert_icommand('izonereport', 'STDOUT')
         
         zone_info = json.loads(stdout)['zones'][0]
         
         for server in zone_info['servers']:
-            for plugin in server['plugins']:
-                
+            for plugin in server['plugins']:      
                 # Skip database plugin which only exists on catalog server when running on consumer server
                 if plugin['type'] == 'database' and test.settings.TOPOLOGY_FROM_RESOURCE_SERVER:
                     continue
